@@ -1,6 +1,8 @@
 ﻿using System.Collections;
+using Dynamic.Tile;
 using FloodManager = Management.Flood.Manager;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Game : MonoBehaviour {
@@ -81,6 +83,44 @@ public class Game : MonoBehaviour {
 	}
 
 	public void GameOver() {
-		throw new System.NotImplementedException();
+		if(HiScore < Score) HiScore = Score;
+		SceneManager.LoadScene("Main");
+	}
+
+	public void MoveW() {
+		Move(Vector2.left);
+	}
+
+	public void MoveN() {
+		Move(Vector2.up);
+	}
+
+	public void MoveS() {
+		Move(Vector2.down);
+	}
+
+	public void MoveE() {
+		Move(Vector2.right);
+	}
+
+	private void Move(Vector3 where) {
+		//Gizmos.DrawSphere(transform.position + (where * 1.5f), 0.1f);
+		//Debug.Break();
+		//GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		//go.transform.position = transform.position + (where * 1.5f);
+		//Debug.DrawLine(transform.position, transform.position + (where * 1.5f));
+		//Debug.Break();
+		Collider2D c = Physics2D.OverlapCircle(PlayerTransform.position + where, 0.1f);
+		if(c != null && c.transform != PlayerTransform) {
+			TileComponent tc = PlayerTransform.GetComponent<TileComponent>();
+			c.transform.GetComponent<TileComponent>().IsPlayer = true;
+			tc.IsPlayer = false;
+			PlayerTransform = c.transform;
+			FloodManager.Turn();
+		}
+	}
+
+	public void Sleep() {
+		FloodManager.Turn();
 	}
 }

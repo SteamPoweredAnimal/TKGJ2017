@@ -39,8 +39,6 @@ namespace Dynamic.Tile {
 		private void StateChangeToPlayer() {
 			if(IsPlayer) {
 				if(IsFlooded) {
-					Debug.Log(IsPlayer);
-					Debug.Log(IsFlooded);
 					Game.Instance.GameOver();
 				} else {
 					GetComponent<SpriteRenderer>().sprite = Game.Instance.TilePlayer;
@@ -79,14 +77,16 @@ namespace Dynamic.Tile {
 			Vector2 p = transform.position;
 			if(mousePos.x.Within(p.x - 0.5f, p.x + 0.5f) &&
 			   mousePos.y.Within(p.y - 0.5f, p.y + 0.5f)) {
-				RaycastHit2D[] col = Physics2D.CircleCastAll(transform.position, 0.8f, Vector2.up);
-				RaycastHit2D hit = col.First(rh => rh.transform.GetComponent<TileComponent>().IsPlayer);
+				//RaycastHit2D[] col = Physics2D.CircleCastAll(transform.position, 0.8f, Vector2.up);
+				//RaycastHit2D hit = col.First(rh => rh.transform.GetComponent<TileComponent>().IsPlayer);
+				Collider2D[] col = Physics2D.OverlapCircleAll(transform.position, 0.8f);
+				Collider2D hit = col.First(c => c.transform.GetComponent<TileComponent>().IsPlayer);
 				if(hit != null) {
 					if(hit.transform == transform) {
 						// We clicked same obj
 					} else {
 						IsPlayer = true;
-						hit.collider.GetComponent<TileComponent>().IsPlayer = false;
+						hit.GetComponent<TileComponent>().IsPlayer = false;
 						Game.Instance.FloodManager.Turn();
 					}
 				}

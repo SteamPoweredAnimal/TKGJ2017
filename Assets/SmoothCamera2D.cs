@@ -17,9 +17,9 @@ public class SmoothCamera2D : MonoBehaviour {
 		Game.Instance.Support.rect = new Rect(0, ratio, 1, 1 - ratio);
 
 		target = Game.Instance.transform;
-		yield return new WaitForSeconds(2.5f);
+		yield return new WaitForSeconds(1.5f);
 		GetComponent<FadeInOut>().FadeDir = -1;
-		yield return new WaitForSeconds(3f);
+		yield return new WaitForSeconds(4f);
 		Camera.main.orthographicSize = 2.5f;
 		target = Game.Instance.PlayerTransform;
 		yield return new WaitForSeconds(1f);
