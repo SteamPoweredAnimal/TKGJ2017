@@ -8,9 +8,12 @@ namespace Management.Flood {
 		private int? CurrentRow = null;
 		private Dictionary<int, List<TileComponent>> Rows;
 		private int Max = 0;
+		private int Difficulty;
+		private int Module;
 
-		public Manager() {
+		public Manager(int difficulty = 1) {
 			Rows = new Dictionary<int, List<TileComponent>>();
+			Difficulty = difficulty;
 		}
 
 		public void Add(TileComponent tile, int y) {
@@ -22,9 +25,15 @@ namespace Management.Flood {
 		}
 
 		public void Turn() {
+
 			if(CurrentRow == null) {
 				Max = Rows.Keys.Max();
 				CurrentRow = Max;
+			}
+			if(Difficulty == 0) {
+				if(Module++ % 2 == 1) {
+					return;
+				}
 			}
 			if(Rows.ContainsKey(CurrentRow.Value)) {
 				foreach(TileComponent tileComponent in Rows[CurrentRow.Value]) {

@@ -59,7 +59,8 @@ public class Game : MonoBehaviour {
 	}
 
 	private void UpdateHiScore() {
-		PlayerPrefs.SetInt("hiScore", HiScore);
+		PlayerPrefs.SetInt("hiScore" + PersistentDataObject.Instance.Size + ":" +
+			PersistentDataObject.Instance.Mode.ToString(), HiScore);
 		GameObject.Find("HiScore").GetComponent<Text>().text = HiScore.ToString();
 	}
 
@@ -74,9 +75,30 @@ public class Game : MonoBehaviour {
 		} else {
 			Instance = this;
 		}
+//		DontDestroyOnLoad(gameObject);
 	}
 
 	public void Start() {
+		if(PersistentDataObject.Instance == null) {
+			Init();
+		} else {
+			int size = PersistentDataObject.Instance.Size;
+			int mode = PersistentDataObject.Instance.Mode;
+			int min = size + 1;
+			int max = size + 3;
+			Generator = new Generator(
+				32 * (PersistentDataObject.Instance.Size + 1),
+				transform,
+				Room,
+				new RoomSize(min, min, max, max),
+				Tile, Wall);
+			Generator.SpawnLevel();
+			FloodManager = new FloodManager(mode);
+			HiScore = PlayerPrefs.GetInt("hiScore" + size.ToString() + ":" + mode.ToString(), 0);
+		}
+	}
+
+	public void Init() {
 		Generator = new Generator(72, transform, Room, new RoomSize(1, 1, 4, 4), Tile, Wall);
 		Generator.SpawnLevel();
 		FloodManager = new FloodManager();
