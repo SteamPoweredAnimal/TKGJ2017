@@ -1,6 +1,7 @@
 ﻿using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Dynamic.Options {
 	public class OptionsComponent : MonoBehaviour {
@@ -24,6 +25,7 @@ namespace Dynamic.Options {
 		private void Next() {
 			Size.SetActive(true);
 			Mode.SetActive(false);
+			GameObject.Find("Subtitle").GetComponent<Text>().text = "Select map size!";
 		}
 
 		public void Small() {
