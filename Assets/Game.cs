@@ -11,7 +11,12 @@ public class Game : MonoBehaviour {
 	public GameObject Wall;
 	public GameObject Room;
 	public Sprite TileFlooded;
+	public Sprite TileWave;
 	public Sprite TileGround;
+	public Sprite[] TileFlowey;
+	public Sprite TileBranch;
+	public Sprite TileWell;
+	public Sprite TileCrack;
 	public Sprite TilePlayer;
 
 	public Camera Support;

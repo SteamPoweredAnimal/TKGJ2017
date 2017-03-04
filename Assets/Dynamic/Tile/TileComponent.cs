@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using Util;
+using Random = UnityEngine.Random;
 using RoomModel = Data.Room.Model;
 using TileModel = Data.Tile.Model;
 
@@ -10,6 +11,7 @@ namespace Dynamic.Tile {
 	public class TileComponent : MonoBehaviour {
 		private RoomModel RoomModel;
 		public TileModel TileModel;
+		private GameObject PotentialPlayer;
 
 		private bool InternalIsPlayer;
 		public bool IsPlayer {
@@ -30,7 +32,7 @@ namespace Dynamic.Tile {
 		}
 
 		private void StateChangeToFlooded() {
-			GetComponent<SpriteRenderer>().sprite = Game.Instance.TileFlooded;
+			GetComponent<SpriteRenderer>().sprite = Game.Instance.TileWave;
 			if(IsPlayer) {
 				Game.Instance.GameOver();
 			}
@@ -41,11 +43,17 @@ namespace Dynamic.Tile {
 				if(IsFlooded) {
 					Game.Instance.GameOver();
 				} else {
-					GetComponent<SpriteRenderer>().sprite = Game.Instance.TilePlayer;
+					PotentialPlayer = new GameObject("player");
+					PotentialPlayer.transform.parent = transform;
+					PotentialPlayer.transform.localPosition = Vector3.zero;
+					PotentialPlayer.AddComponent<SpriteRenderer>().sprite = Game.Instance.TilePlayer;
+
+					//GetComponent<SpriteRenderer>().sprite = Game.Instance.TilePlayer;
 					Game.Instance.PlayerTransform = transform;
 				}
 			} else {
-				GetComponent<SpriteRenderer>().sprite = Game.Instance.TileGround;
+				//GetComponent<SpriteRenderer>().sprite = Game.Instance.TileGround;
+				Destroy(PotentialPlayer);
 			}
 		}
 
@@ -61,8 +69,17 @@ namespace Dynamic.Tile {
 			RoomModel = transform.parent.GetComponent<RoomModel>();
 			TileModel = gameObject.GetComponent<TileModel>();
 
+			int r = Random.Range(0, 300);
 			if(TileModel.Idx == 3) {
 				Game.Instance.Do(MakePlayerAfterDelay());
+			} else if(TileModel.Idx == 127 || TileModel.Idx == 212) {
+				GetComponent<SpriteRenderer>().sprite = Game.Instance.TileWell;
+			} else if(r > 280) {
+				GetComponent<SpriteRenderer>().sprite = Game.Instance.TileBranch;
+			} else if(r > 250) {
+				GetComponent<SpriteRenderer>().sprite = Game.Instance.TileCrack;
+			} else if(r > 150) {
+				GetComponent<SpriteRenderer>().sprite = Game.Instance.TileFlowey[Random.Range(0, 2)];
 			} else {
 				GetComponent<SpriteRenderer>().sprite = Game.Instance.TileGround;
 			}
@@ -91,6 +108,10 @@ namespace Dynamic.Tile {
 					}
 				}
 			}
+		}
+
+		public void AfterFlood() {
+			GetComponent<SpriteRenderer>().sprite = Game.Instance.TileFlooded;
 		}
 	}
 }

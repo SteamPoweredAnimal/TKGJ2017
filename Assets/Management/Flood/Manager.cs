@@ -31,6 +31,11 @@ namespace Management.Flood {
 					tileComponent.IsFlooded = true;
 				}
 			}
+			if(Rows.ContainsKey(CurrentRow.Value - 1)) {
+				foreach(TileComponent tileComponent in Rows[CurrentRow.Value - 1]) {
+					tileComponent.AfterFlood();
+				}
+			}
 			CurrentRow--;
 			Game.Instance.Score = Max - CurrentRow.Value;
 		}
